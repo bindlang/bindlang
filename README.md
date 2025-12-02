@@ -22,7 +22,7 @@ Each symbol carries its own gate conditions. The system only marks it as bound w
 ## Installation
 
 ```bash
-pip install bindlang
+pip install git+https://github.com/bindlang/bindlang.git
 ```
 
 **Requirements**: Python 3.10+, Pydantic 2.0+
