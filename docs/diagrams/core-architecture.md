@@ -2,7 +2,9 @@
 
 ## Core Concept
 
-bindlang separates **what could happen** from **what does happen**:
+bindlang separates **what could happen** from **what does happen**.
+
+Instead of imperative orchestration ("do X, then Y, wait for Z"), bindlang uses declarative contracts. Symbols define their activation conditions and remain latent until context satisfies them:
 
 ```mermaid
 graph LR
