@@ -38,22 +38,10 @@ graph TB
         CreateMethod -.uses.-> BaseT
     end
 
-    subgraph "Benefits"
-        B1[DRY Principle<br/>Define once, use many]
-        B2[Auto-validation<br/>Required fields enforced]
-        B3[Type safety<br/>Pydantic models]
-        B4[LLM-ready<br/>JSON schema generation]
-    end
-
-    Methods --> B1
-    Methods --> B2
-    Methods --> B3
-    Methods --> B4
-
-    style BaseT fill:#E1BEE7
-    style CharT fill:#CE93D8
-    style VoteT fill:#BA68C8
-    style ApprovalT fill:#AB47BC
+    style BaseT fill:#E1BEE7,color:#000
+    style CharT fill:#CE93D8,color:#000
+    style VoteT fill:#BA68C8,color:#000
+    style ApprovalT fill:#AB47BC,color:#000
 ```
 
 ## Template Lifecycle
@@ -124,25 +112,8 @@ schema = template.to_json_schema()
 }
 ```
 
-## Use Cases
-
-**Narrative Systems:**
-- CharacterStateTemplate: Validate character emotions, locations
-- PlotEventTemplate: Enforce plot structure requirements
-- DialogueTemplate: Ensure speaker, content, tone fields
-
-**Multi-Agent Systems:**
-- WitnessTemplate: Quorum validation
-- VoteTemplate: Weighted voting with bounds
-- ProposalTemplate: Structured decision-making
-
-**Approval Workflows:**
-- ApprovalTemplate: Document, approver, status tracking
-- ReviewTemplate: Reviewer, score, comments
-- SignoffTemplate: Multi-signature requirements
-
 ## See Also
 
-- [Core Architecture](core-architecture.md) - How templates integrate with BindingEngine
-- [Templates Reference](../reference/templates.md) - API documentation
-- [Pattern Library](../reference/patterns.md) - Common template patterns
+- [Core Architecture](core-architecture.md)
+- [Templates Reference](../reference/templates.md)
+- [Pattern Library](../reference/patterns.md)

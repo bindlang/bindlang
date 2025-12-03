@@ -1,36 +1,26 @@
 # bindlang Core Architecture
 
-## Theoretical Foundation → Implementation
+## Core Concept
+
+bindlang separates **what could happen** from **what does happen**:
 
 ```mermaid
-graph TB
-    subgraph "DSBL Theory - The Fourth Semantic Dimension"
-        Theory[Latent/Bound Semantics<br/>Meaning that waits vs Meaning fixed by context]
-        Analogy[Sealed Ballot Analogy<br/>Intent exists but outcome pending]
-        Principle[Defer WHAT gets determined<br/>not WHEN it executes]
+graph LR
+    subgraph "bindlang Flow"
+        LS[LatentSymbol<br/>Potential meaning]
+        Gate[Gate Check<br/>Context evaluation]
+        BS[BoundSymbol<br/>Fixed meaning]
 
-        Theory --> Analogy
-        Theory --> Principle
+        LS --> Gate
+        Gate -->|pass| BS
     end
 
-    subgraph "bindlang Implementation"
-        LatentSymbol[LatentSymbol<br/>Meaning that waits]
-        BoundSymbol[BoundSymbol<br/>Meaning fixed by context]
-        Transition[Binding Process<br/>Latent → Bound]
-
-        LatentSymbol --> Transition
-        Transition --> BoundSymbol
-    end
-
-    Theory -.maps to.-> LatentSymbol
-    Principle -.maps to.-> Transition
-    Analogy -.maps to.-> BoundSymbol
-
-    style Theory fill:#E3F2FD
-    style LatentSymbol fill:#4CAF50
-    style BoundSymbol fill:#FF9800
-    style Transition fill:#2196F3
+    style LS fill:#4CAF50,color:#000
+    style Gate fill:#2196F3,color:#000
+    style BS fill:#FF9800,color:#000
 ```
+
+Symbols carry intent that remains dormant until context activates them. See [Foundation](../theory/FOUNDATION.md) for theoretical background.
 
 ## Core Architecture - System Overview
 
@@ -79,52 +69,10 @@ graph TB
     Engine --> StateChecker
     Engine -.creates.-> BS
 
-    style LS fill:#C8E6C9
-    style BS fill:#FFCC80
-    style CTX fill:#90CAF9
-    style Engine fill:#CE93D8
-```
-
-## Design Decision Map
-
-```mermaid
-graph LR
-    subgraph "Key Design Decisions"
-        D1[Decision 1:<br/>Immutable Context]
-        D2[Decision 2:<br/>AND Logic Gates]
-        D3[Decision 3:<br/>Symbol ≠ Instance]
-        D4[Decision 4:<br/>Dependency Graph]
-        D5[Decision 5:<br/>Pydantic Models]
-        D6[Decision 6:<br/>Checker Separation]
-    end
-
-    subgraph "Rationale & Benefits"
-        R1[Prevents race conditions<br/>Reproducible binding<br/>Audit clarity]
-
-        R2[Conservative activation<br/>Explicit requirements<br/>Predictable behavior]
-
-        R3[One latent → many bounds<br/>Reusability<br/>Immutable contracts]
-
-        R4[Circular detection<br/>Cascade activation<br/>DFS-based validation]
-
-        R5[Type safety<br/>Validation<br/>IDE support<br/>Serialization]
-
-        R6[Single Responsibility<br/>Extensible<br/>Testable]
-    end
-
-    D1 --> R1
-    D2 --> R2
-    D3 --> R3
-    D4 --> R4
-    D5 --> R5
-    D6 --> R6
-
-    style D1 fill:#BBDEFB
-    style D2 fill:#C5CAE9
-    style D3 fill:#D1C4E9
-    style D4 fill:#E1BEE7
-    style D5 fill:#F8BBD0
-    style D6 fill:#FFCCBC
+    style LS fill:#C8E6C9,color:#000
+    style BS fill:#FFCC80,color:#000
+    style CTX fill:#90CAF9,color:#000
+    style Engine fill:#CE93D8,color:#000
 ```
 
 ## Binding Process - Detailed Flow
@@ -181,66 +129,6 @@ sequenceDiagram
     Engine-->>User: List[BoundSymbol]
 ```
 
-## The Gate System - Context Matching
-
-```mermaid
-graph TB
-    subgraph "GateCondition - The Contract"
-        Who["who: Set<br/>WHO can activate?<br/>Example: alice, bob"]
-        Where["where: Set<br/>WHERE can it activate?<br/>Example: beach, forest"]
-        When["when: Temporal<br/>WHEN can it activate?<br/>Example: after 2024-01-01"]
-        State["state: Dict<br/>WHAT state required?<br/>Example: level=5"]
-
-        Logic[Combine with AND<br/>ALL must match]
-
-        Who --> Logic
-        Where --> Logic
-        When --> Logic
-        State --> Logic
-    end
-
-    subgraph "Context - The Reality"
-        CWho["who: str<br/>WHO is acting<br/>Example: alice"]
-        CWhere["where: str<br/>WHERE is it<br/>Example: beach"]
-        CWhen["when: datetime<br/>WHEN is it<br/>Example: 2024-03-15"]
-        CState["state: Dict<br/>WHAT is state<br/>Example: level=7"]
-    end
-
-    subgraph "Checker Logic"
-        WhoCheck{who in gate.who?}
-        WhereCheck{where in gate.where?}
-        WhenCheck{when satisfies gate.when?}
-        StateCheck{All gate.state keys match?}
-
-        Final{ALL pass?}
-    end
-
-    CWho --> WhoCheck
-    CWhere --> WhereCheck
-    CWhen --> WhenCheck
-    CState --> StateCheck
-
-    Who -.required by.-> WhoCheck
-    Where -.required by.-> WhereCheck
-    When -.required by.-> WhenCheck
-    State -.required by.-> StateCheck
-
-    WhoCheck --> Final
-    WhereCheck --> Final
-    WhenCheck --> Final
-    StateCheck --> Final
-
-    Final -->|YES| Bind[Create BoundSymbol]
-    Final -->|NO| Skip[Remains Latent<br/>Record in audit]
-
-    style Who fill:#E8F5E9
-    style Where fill:#E3F2FD
-    style When fill:#FFF3E0
-    style State fill:#FCE4EC
-    style Bind fill:#C8E6C9
-    style Skip fill:#FFCDD2
-```
-
 ## Dependency System - Cascade Activation
 
 ```mermaid
@@ -295,11 +183,11 @@ graph TB
         Z -.detected.-> Error
     end
 
-    style A fill:#C8E6C9
-    style B fill:#A5D6A7
-    style C fill:#81C784
-    style D fill:#66BB6A
-    style Error fill:#EF5350
+    style A fill:#C8E6C9,color:#000
+    style B fill:#A5D6A7,color:#000
+    style C fill:#81C784,color:#000
+    style D fill:#66BB6A,color:#000
+    style Error fill:#EF5350,color:#000
 ```
 
 ## Multi-Actor Orchestration - ActorSequenceRunner
@@ -340,18 +228,14 @@ sequenceDiagram
     Runner-->>User: (all_bound_symbols, final_state)
 ```
 
-**Key Properties:**
-- **Sequential perspectives**: Each actor binds in order
-- **Shared state**: Mutations from one actor affect next actor's context
-- **Witness semantics**: `who=None` gates activate for any actor
-- **State accumulation**: Final state reflects all mutations
+Each actor binds in order. State mutations affect subsequent actors. `who=None` gates activate for any actor.
 
 ## Audit Trail - Tracking Binding Attempts
 
 ```mermaid
 graph TB
     subgraph "BindingAttempt Model"
-        BA[BindingAttempt<br/>━━━━━━━━━<br/>symbol_id: str<br/>success: bool<br/>attempt_timestamp: datetime<br/>context_snapshot: Dict<br/>failure_reasons: List[FailureReason]]
+        BA[BindingAttempt<br/>━━━━━━━━━<br/>symbol_id: str<br/>success: bool<br/>attempt_timestamp: datetime<br/>context_snapshot: Dict<br/>failure_reasons: List]
 
         FR[FailureReason<br/>━━━━━━━━━<br/>category: str<br/>message: str<br/>gate_dimension: str]
 
@@ -397,43 +281,16 @@ graph TB
     FR -.category.-> Cat4
     FR -.category.-> Cat5
 
-    style BA fill:#E1BEE7
-    style FR fill:#F48FB1
-    style Sink fill:#90CAF9
-    style Engine fill:#CE93D8
+    style BA fill:#E1BEE7,color:#000
+    style FR fill:#F48FB1,color:#000
+    style Sink fill:#90CAF9,color:#000
+    style Engine fill:#CE93D8,color:#000
 ```
 
-**Usage:**
-- Debug failed activations: Check `failure_reasons` for specific gate dimension
-- Performance analysis: Count attempts per symbol over time
-- Compliance audit: Track who attempted what, when, and result
-- Custom sinks: Extend `AuditSink` for database, metrics, or logging integration
-
-## Summary: Theory → Design → Implementation
-
-| Theoretical Concept | Design Decision | Implementation |
-|---------------------|-----------------|----------------|
-| **Latent semantics** | Symbols carry potential meaning | `LatentSymbol` with payload |
-| **Context-dependent activation** | Gates define activation conditions | `GateCondition` + Checker system |
-| **Bound semantics** | Context fixes meaning | `BoundSymbol` with effect |
-| **Immutability** | Contracts don't change | Pydantic frozen models |
-| **Explicit causality** | Track what activated why | Audit trail + context snapshot |
-| **Dependency tracking** | Some symbols need others first | DFS-based dependency graph |
-| **Multi-actor coordination** | Sequential perspectives with shared state | ActorSequenceRunner |
-| **Separation of concerns** | Checkers are independent | One checker per dimension |
-| **Type safety** | Validate contracts | Pydantic + template validation |
-
-**Core insight:** The "Latent/Bound" semantic dimension is implemented through:
-1. **LatentSymbol** = Semantic potential (what COULD happen)
-2. **GateCondition** = Activation contract (WHEN it happens)
-3. **Context** = Runtime reality (what IS)
-4. **Checker system** = Evaluation logic (does reality match contract?)
-5. **BoundSymbol** = Fixed meaning (what DID happen)
-
-This maps the theoretical "sealed ballot" analogy directly into executable code.
+Check `failure_reasons` for debugging. Extend `AuditSink` for custom storage.
 
 ## See Also
 
-- [Template System](template-system.md) - Reusable symbol blueprints
-- [Advanced Patterns](advanced-patterns.md) - Composition and portability examples
-- [Reference Documentation](../reference/index.md) - API reference
+- [Template System](template-system.md)
+- [Advanced Patterns](advanced-patterns.md)
+- [Reference Documentation](../reference/index.md)

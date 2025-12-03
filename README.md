@@ -32,8 +32,8 @@ pip install git+https://github.com/bindlang/bindlang.git
 ## Documentation
 
 - **[Reference](docs/reference/index.md)** - API reference, quickstart and usage patterns
-- **[Architecture](docs/ARCHITECTURE.md)** - Core components and design decisions
-- **[Foundation](docs/theory/FOUNDATION.md)** - Theoretical foundation and design principles
+- **[Architecture](docs/ARCHITECTURE.md)** - Module structure and design principles
+- **[Foundation](docs/theory/FOUNDATION.md)** - Theoretical concepts (latent/bound semantics)
 
 ---
 

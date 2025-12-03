@@ -370,6 +370,6 @@ task_c: gate.state = {progress: 2}, payload.state_mutation = {progress: 3}
 
 ## See Also
 
-- [Engine Reference](../reference/engine.md) - `bind_all_registered()` API
-- [Audit Trail](../reference/audit-trail.md) - Identifying latent symbols
-- [Examples](../examples/) - Complete working examples
+- [Engine Reference](../reference/engine.md)
+- [Audit Trail](../reference/audit-trail.md)
+- [When to Use What](when-to-use-what.md)

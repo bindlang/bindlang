@@ -112,7 +112,6 @@ All conditions must pass (implicit AND).
 
 ## See Also
 
-- [State Mutations](state-mutations.md) - Detailed comparison with dependencies
-- [Orchestration Reference](../reference/orchestration.md) - ActorSequenceRunner API
-- [Models Reference](../reference/models.md) - GateCondition semantics
-- [Common Patterns](../reference/patterns.md) - Working examples
+- [State Mutations](state-mutations.md)
+- [Orchestration Reference](../reference/orchestration.md)
+- [Models Reference](../reference/models.md)

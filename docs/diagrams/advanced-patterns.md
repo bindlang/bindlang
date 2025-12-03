@@ -30,60 +30,12 @@ sequenceDiagram
     Engine-->>User: Final results + all contexts
 ```
 
-**Pattern:** Context transformation between binding rounds enables reactive systems.
+**Pattern:** Context transformation between binding rounds.
 
 **Use cases:**
-- Laboratory scenario: Door opens → researchers enter → experiments begin
-- Approval chains: Manager approves → director review unlocked → publication enabled
-- Game state: Player moves → enemies react → loot spawns
-
-**Key insight:** State mutations in symbol payloads drive context evolution without manual orchestration.
-
----
-
-## Complete Example - Theory to Practice
-
-```mermaid
-graph TB
-    subgraph "1. Theory: Latent Meaning"
-        T1["If Anna is at beach, she feels brave<br/>Intent exists<br/>Outcome pending"]
-    end
-
-    subgraph "2. Implementation: LatentSymbol"
-        L1["LatentSymbol<br/>id: anna_brave<br/>type: CHARSTATE:brave<br/>payload: character=Anna, emotion=brave<br/>gate: where=beach"]
-    end
-
-    subgraph "3. Context Arrives"
-        C1["Context<br/>who: narrator<br/>when: 2024-03-15<br/>where: beach<br/>state: chapter=5"]
-    end
-
-    subgraph "4. Gate Evaluation"
-        E1["WhereChecker<br/>beach in gate.where?<br/>PASS"]
-    end
-
-    subgraph "5. Bound Meaning"
-        B1["BoundSymbol<br/>symbol_id: anna_brave<br/>effect: character=Anna, emotion=brave<br/>bound_at: 2024-03-15T14:30<br/>context_snapshot: where=beach"]
-    end
-
-    subgraph "6. Effect Delivered"
-        F1["Anna IS brave at beach<br/>Meaning fixed by context<br/>Outcome determined"]
-    end
-
-    T1 --> L1
-    L1 --> E1
-    C1 --> E1
-    E1 --> B1
-    B1 --> F1
-
-    style T1 fill:#E8F5E9
-    style L1 fill:#C8E6C9
-    style C1 fill:#90CAF9
-    style E1 fill:#F48FB1
-    style B1 fill:#FFCC80
-    style F1 fill:#FFE082
-```
-
-**Demonstrates:** End-to-end flow from theoretical concept (latent meaning) to concrete execution (bound symbol with fixed effect).
+- Laboratory scenario: Door opens, researchers enter, experiments begin
+- Approval chains: Manager approves, director review unlocked, publication enabled
+- Game state: Player moves, enemies react, loot spawns
 
 ---
 
@@ -128,25 +80,20 @@ graph TB
         C2 --> C3
     end
 
-    Note1["Same symbol definition<br/>Different contexts<br/>Different meanings<br/>━━━━━━━━━<br/>This is PORTABILITY"]
+    Note1["Same symbol<br/>Different contexts<br/>Different outcomes"]
 
-    style JSON fill:#FFE082
-    style B4 fill:#C8E6C9
-    style C3 fill:#90CAF9
-    style Note1 fill:#FFCCBC
+    style JSON fill:#FFE082,color:#000
+    style B4 fill:#C8E6C9,color:#000
+    style C3 fill:#90CAF9,color:#000
+    style Note1 fill:#FFCCBC,color:#000
 ```
 
 **Pattern:** Symbols serialize to JSON and activate differently across components.
 
-**Properties:**
-- **Decoupled meaning:** Symbol definition independent of execution environment
-- **Context-dependent activation:** Same symbol, different outcomes based on local context
-- **Zero runtime coupling:** Components don't share state, only symbol contracts
-
 **Use cases:**
-- Editor creates symbols → Game engine executes them
-- ML model produces symbols → Analytics consumes them
-- Multi-agent system: Agents share symbol pool, bind from individual perspectives
+- Editor creates symbols, game engine executes them
+- ML model produces symbols, analytics consumes them
+- Multi-agent: Agents share symbol pool, bind from individual perspectives
 
 ---
 
@@ -199,26 +146,19 @@ graph LR
     Q3 --> D1
     D1 --> D2
 
-    Note3["Symbols created by different agents<br/>Combined to create emergent meaning<br/>No agent knew about quorum logic<br/>━━━━━━━━━<br/>This is COMPOSABILITY"]
+    Note3["Symbols from different agents<br/>combine via dependencies"]
 
-    style Pool fill:#E1BEE7
-    style Q3 fill:#CE93D8
-    style D2 fill:#AB47BC
-    style Note3 fill:#FFCCBC
+    style Pool fill:#E1BEE7,color:#000
+    style Q3 fill:#CE93D8,color:#000
+    style D2 fill:#AB47BC,color:#000
+    style Note3 fill:#FFCCBC,color:#000
 ```
 
-**Pattern:** Independent agents contribute symbols that compose into higher-order meaning.
-
-**Key properties:**
-- **Emergent semantics:** Quorum meaning emerges from individual witness symbols
-- **Decentralized creation:** No central coordinator required
-- **Dependency-based composition:** QUORUM symbol depends on witness symbols
-- **Automated decision:** Approval granted when quorum threshold met
+**Pattern:** Independent agents contribute symbols that compose via dependencies.
 
 **Use cases:**
 - Multi-signature approval workflows
-- Distributed consensus systems
-- Byzantine fault tolerance (witness verification)
+- Distributed consensus
 - Collaborative decision-making
 
 ---
@@ -290,7 +230,7 @@ if result:
     print("Document published after full approval chain")
 ```
 
-**Result:** Each step activates only when dependencies are satisfied, creating a cascading approval workflow.
+Each step activates only when dependencies are satisfied.
 
 ---
 
@@ -355,8 +295,8 @@ print(f"Final state: {final_state}")
 
 ## See Also
 
-- [Core Architecture](core-architecture.md) - Fundamental system design
-- [Template System](template-system.md) - Reusable symbol blueprints
-- [Orchestration Reference](../reference/orchestration.md) - ActorSequenceRunner API
-- [Common Patterns](../reference/patterns.md) - Pattern catalog
-- [State Mutations Guide](../guides/state-mutations.md) - State evolution mechanics
+- [Core Architecture](core-architecture.md)
+- [Template System](template-system.md)
+- [Orchestration Reference](../reference/orchestration.md)
+- [Common Patterns](../reference/patterns.md)
+- [State Mutations Guide](../guides/state-mutations.md)
