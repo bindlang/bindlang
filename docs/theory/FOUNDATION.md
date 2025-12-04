@@ -1,19 +1,12 @@
 # bindlang Foundation
 
-**Deferred Semantic Binding for Python**
-
 ---
 
-## Project Vision
+## Overview
 
-bindlang implements deferred semantic binding - portable semantic contracts where meaning remains latent until context activates it.
+bindlang implements **deferred semantic binding** as a Python library.
 
-**Applications:**
-
-- Narrative compression
-- Multi-agent coordination
-- Approval workflows with audit trails
-- Context-dependent authorization
+It starts from a simple idea: sometimes meaning should not be decided at definition time, but only when the right context is available.
 
 ---
 
@@ -21,221 +14,194 @@ bindlang implements deferred semantic binding - portable semantic contracts wher
 
 ### Fundamental Concepts
 
-**Latent**: Meaning that waits. A state of semantic potential where the interpretation method (HOW) is defined, but the concrete meaning (WHAT) awaits context.
+**Latent** – Semantic potential. The interpretation method (_how to read this symbol_) is defined, but the concrete meaning (_what it does_) is undecided until context arrives.
 
-**Bound**: Meaning fixed by context. A semantic state where context has provided the necessary conditions (who, when, where, state), transforming latent potential into concrete meaning.
+**Bound** – Semantic resolution. Context supplies the missing conditions (who, when, where, system state), allowing the latent symbol to acquire a determinate meaning.
 
-**Transition**: `Latent → [context evaluation] → Bound` (or remains Latent if conditions aren't satisfied)
+**Transition**
 
-### The Fourth Semantic Dimension
+`Latent → [context evaluation] → Bound`
+(or remains Latent if the conditions are not met)
 
-Deferred Semantic Binding operates as a fourth orthogonal semantic dimension, alongside:
+---
 
-- **True/False** (logic)
-- **Defined/Undefined** (existence)
-- **Null/Value** (content)
-- **Latent/Bound** (contextual activation) ← NEW
+## Semantic Dimension
+
+Deferred semantic binding functions as a fourth semantic axis, orthogonal to familiar distinctions:
+
+- True / False
+- Defined / Undefined
+- Null / Value
+- **Latent / Bound** (contextual activation)
 
 ### Key Principle
 
-Rather than deferring _when_ something executes (like promises or lazy evaluation), bindlang defers _what_ gets determined. This is fundamentally different from existing computational abstractions.
+bindlang does **not** defer when something executes.  
+It defers **what** becomes true, valid, or actionable.
 
-### The Sealed Ballot Analogy
+---
 
-A cast but uncounted vote carries voter intent yet remains neither true nor false in the tally. The meaning emerges only during counting - the context provides the conditions for semantic binding.
+## A Simple Voting Analogy
 
-bindlang generalizes this pattern: latent symbols carry structured intent, but their concrete effect on world state exists only at the moment of binding under a specific context.
+A cast but uncounted ballot expresses intent but has no definite effect until the tallying context resolves it. The meaning exists, but only in potential form.
+
+bindlang generalizes this pattern: latent symbols encode structured intent, and their concrete effect on world state is determined only at binding time under a specific context.
 
 ---
 
 ## Context Evaluation Framework
 
-Meaning doesn't exist independently but depends on runtime evaluation of **four contextual dimensions**:
+Meaning is evaluated through four contextual dimensions:
 
-1. **Who** - Participant/identity/agent
-2. **When** - Time/sequence/ordering
-3. **Where** - Domain/location/scope
-4. **State** - Modality/quality/system conditions
+1. **Who** – identity, role, trust level
+2. **When** – order, timing, temporal conditions
+3. **Where** – domain, scope, location
+4. **State** – system conditions, mode, modality
 
 ### Example: Same Symbol, Different Contexts
 
-The symbol `⟦VOTE:promote⟧` activates differently based on context:
+`⟦VOTE:promote⟧`
 
-**Admin context** (high trust):
+**Admin context**
 
-- Weight: 2.0
-- Effect: Immediate
-- Validation: None required
+- Weight 2.0
+- Immediate effect
+- No validation required
 
-**New user context** (low trust):
+**New user context**
 
-- Weight: 0.5
-- Effect: Deferred pending verification
-- Validation: Required
+- Weight 0.5
+- Deferred effect pending checks
+- Validation required
 
-**Blocked user context**:
+**Blocked context**
 
-- Weight: 0.0
-- Effect: None (remains dormant)
-- Validation: N/A
+- Weight 0.0
+- No effect
+- No validation
 
-Identical notation; entirely different outcomes based on contextual gate evaluation.
+Same symbol. Meaning shifts entirely with context.
 
 ---
 
 ## Symbol Notation & Types
 
-### Notation Convention
+### Notation
 
-`⟦TYPE:parameter⟧` - Makes dormant meaning visible and portable
+`⟦TYPE:parameter⟧` – explicit carrier of latent semantic intent.
 
 ### Symbol Classes
 
-**Gates**: Filters determining activation permission
+**Gates** – conditions that determine whether activation is allowed.
 
-- Evaluate to boolean (may activate / must not activate)
-- Must be evaluated before Events can execute
+- Evaluate to boolean.
+- Must pass before any event can run.
 
-**Events**: Actions executing upon activation
+**Events** – actions that occur upon activation.
 
-- Only run after all relevant Gates pass
-- Carry the actual semantic payload
-
-### Symbol Lifecycle
-
-At the level of concrete instances, symbols follow a lifecycle:
-
-```text
-Definition → Latent → [Gate Evaluation] → Activated → Bound → Archived
-                                       ↘ Failed → Expired
-```
-
-- **Definition**: A symbolic contract template (how to interpret, what to do).
-- **Latent**: A concrete "ticket" that may or may not bind under a future context.
-- **Bound**: The ticket has successfully activated under a specific context.
-- **Archived**: The ticket is no longer eligible for binding (its semantic potential is spent).
-- **Failed / Expired**: The ticket could not bind (felicity conditions violated, or context moved on).
-
-bindlang explicitly models this lifecycle so that systems can track not only what happened, but also what _could have happened but never did_.
+- Execute only after all relevant gates have passed.
+- Carry the semantic payload.
 
 ---
 
-## Symbol Consumption & Double-Spend Semantics
+## Symbol Lifecycle
 
-Deferred semantic binding introduces an additional concern beyond traditional speech-act theory: what prevents the same latent contract from being applied multiple times in ways that are semantically nonsensical?
+Concrete symbol instances follow a lifecycle:
 
-In bindlang, each latent symbol is treated as a **binding ticket**: a single, portable opportunity to realize a specific performative effect under suitable context.
+```text
+Definition → Latent → [Gate Evaluation] → Activated → Bound → Archived
+                                     ↘ Failed → Expired
+```
 
-### One-Shot vs. Reusable Meaning
+- **Definition** – a reusable interpretation template.
+- **Latent** – a concrete ticket that _may_ bind later.
+- **Bound** – successfully activated under a specific context.
+- **Archived** – no longer eligible for activation.
+- **Failed / Expired** – could not activate due to violated or outdated conditions.
 
-There are two distinct patterns of use:
+bindlang tracks not only what happened, but also what **could have** happened.
 
-- **One-shot tickets**
-  Some performatives are inherently single-use:
+---
 
-  - `⟦MARRY:couple⟧`
-  - `⟦APPROVE:invoice⟧`
-  - `⟦SIGN:contract⟧`
+## Symbol Consumption & Reuse Semantics
 
-  Once the contract has been successfully bound and its effect applied, it no longer makes sense to "spend" the exact same ticket again. The symbol's semantic potential has been **consumed**.
+Latent symbols act as **binding tickets**: concrete opportunities to realize an effect under suitable conditions.
+One practical concern is avoiding situations where the _same ticket_ is applied multiple times in ways that no longer make semantic sense.
 
-- **Reusable rules**
-  Other patterns are naturally repeatable:
+### One-Shot Tickets
 
-  - "When `temp > 30°C`, turn on the fan"
-  - "When `submissions_open=true`, notify reviewers"
-  - "When `has_weapon=true`, allow `attack`"
+Some performatives are intrinsically single-use:
 
-  Here the _pattern_ is stable, but each activation is a new event instance. The underlying rule may remain available for future contexts.
+- `⟦MARRY:couple⟧`
+- `⟦APPROVE:invoice⟧`
+- `⟦SIGN:contract⟧`
 
-bindlang separates these concerns at the semantic level by distinguishing between:
-
-- **Symbol definitions**: reusable templates ("how to interpret and what to do")
-- **Symbol instances**: concrete tickets participating in the lifecycle above
-
-### Default: Avoiding Double-Spend of Meaning
-
-By default, bindlang treats each latent symbol instance as **one-shot**:
-
-- Once a latent symbol binds and transitions to **Bound → Archived**, that particular ticket cannot bind again.
-- This mirrors practices such as:
-
-  - not counting the same ballot twice,
-  - not applying the same signature to the same document twice,
-  - not re-running the exact same approval step without minting a new approval opportunity.
-
-This default prevents **double-spend of meaning**: a single semantic commitment cannot be implicitly reused multiple times without the system explicitly minting new tickets.
+Once such a symbol has bound and its effect has been applied, that specific ticket is spent. Re-using the exact same instance would misrepresent what actually happened.
 
 ### Reusable Contracts
 
-For domains that behave more like rule engines (e.g. monitoring, control systems, recurring workflows), bindlang allows symbol definitions to be interpreted as **reusable contracts**:
+Other patterns behave more like standing rules:
 
-- The _definition_ remains latent across contexts.
-- Each time the gate conditions are satisfied, a new **BoundSymbol event** is produced.
-- State gates can be used to avoid pathological oscillations (e.g. only bind if `fan_on == false`).
+- If `temp > 30°C` → turn on fan
+- If `submissions_open=true` → notify reviewers
+- If `has_weapon=true` → allow `attack`
 
-- One-shot symbols model **unique performative events**.
-- Reusable symbols model **standing rules** that can fire multiple times.
+Here, the _definition_ persists as a reusable contract. Each time the gate conditions are satisfied, a new activation takes place and a new event instance is produced.
 
-Systems must be explicit about whether latent meaning is a consumable ticket or a reusable rule.
+bindlang makes this distinction explicit:
+
+- **Symbol definitions** – reusable templates for interpretation and effect
+- **Symbol instances** – individual tickets that participate in the lifecycle above
+
+This clarifies when a specific semantic commitment is consumed once, and when it is allowed to fire repeatedly under changing context.
 
 ---
 
 ## Foundation Symbol Library
 
-The framework extends speech-act theory from Austin and Searle: tokens function as computational performatives whose illocutionary force is not fixed but varies with context. bindlang operationalizes this by making illocution a runtime computation over identity, timing, and system state.
+bindlang extends ideas from speech-act theory: performative meaning becomes a runtime computation over identity, time, and system state.
 
-### Core Symbols (Illustrative)
+### Symbol examples (illustrative)
 
-| Symbol             | Description                                    | Context Sensitivity  |
-| ------------------ | ---------------------------------------------- | -------------------- |
-| `⟦VOTE:promote⟧`   | Promotional voting with adaptive semantics     | Who, When, State     |
-| `⟦WITNESS⟧`        | Multi-actor attestation with quorum            | Who (count), When    |
-| `⟦GATE:sec_clean⟧` | Security gating with context-dependent cleanup | Who, State           |
-| `⟦TRUST:target⟧`   | Trust assessment and scoring                   | Who (both), When     |
-| `⟦CASCADE:viral⟧`  | Viral information propagation                  | Who (multiple), When |
-| `⟦DECAY⟧`          | Temporal decay and state fading                | When, State          |
+| Symbol             | Description                                | Context Sensitivity |
+| ------------------ | ------------------------------------------ | ------------------- |
+| `⟦VOTE:promote⟧`   | Promotional voting with adaptive semantics | Who, When, State    |
+| `⟦WITNESS⟧`        | Quorum-based attestation                   | Who, When           |
+| `⟦GATE:sec_clean⟧` | Security gating with conditional cleanup   | Who, State          |
+| `⟦TRUST:target⟧`   | Trust scoring and evaluation               | Who, When           |
+| `⟦CASCADE:viral⟧`  | Propagation trigger                        | Who, When           |
+| `⟦DECAY⟧`          | Temporal fading                            | When, State         |
 
 ---
 
-## Key Differentiators
+## Differentiators
 
-### What bindlang Is NOT:
+### What bindlang is not
 
-- **Not lazy evaluation**: Delays _what_, not _when_
-- **Not promises**: No temporal deferral, semantic deferral
-- **Not conditional logic**: Contracts travel with symbols, not scattered in if-statements
-- **Not RAG/chunking**: Structured activation, not similarity search
-- **Not summarization**: No lossy compression, full semantic preservation in latent form
+- Lazy evaluation
+- Promises
+- Standard conditional logic
 
-### What bindlang IS:
+### What bindlang is
 
-- **Portable semantic contracts**: Symbol meaning defined once, evaluated anywhere
-- **Context-aware activation**: Same symbol behaves differently in different contexts
-- **Dependency-aware**: Cascade effects when state changes
-- **Auditable**: Track what activated, what stayed dormant, and why
-- **Compression through deferral**: Store latent, bind on-demand
+- Portable semantic contracts
+- Context-aware activation
+- Cascade-ready dependency semantics
+- Auditable runtime behavior
+- Compression via semantic deferral
 
 ---
 
 ## Design Principles
 
-1. **Minimal core**: Prove fundamental concepts before expanding
-2. **Type safety**: Strong typing for all semantic constructs
-3. **Portability**: Symbols serialize cleanly to JSON
-4. **Auditability**: Track what activated, what stayed latent, and why
-5. **Domain-agnostic**: Applications span narrative, multi-agent, workflows, and authorization
+1. Minimal core
+2. Strong typing
+3. JSON-portable symbols
+4. Full auditability of latent and bound states
 
 ---
 
-## References & Prior Art
+## References
 
-- **Theoretical foundation**: Latent/Bound semantics - [https://dsbl.dev/latentbound.html](https://dsbl.dev/latentbound.html)
-- **Speech-act theory**: Austin, Searle (computational performatives)
-- **Related work**:
-
-  - Promises (temporal deferral) - different from semantic deferral
-  - Lazy evaluation (computational efficiency) - bindlang is about semantic clarity
-  - Modal logic (possible worlds) - bindlang makes context computationally explicit
-
----
+- Theoretical foundation – [https://dsbl.dev/dsbl-framework.html](https://dsbl.dev/dsbl-framework.html)
+- Latent/Bound – [https://dsbl.dev/latentbound.html](https://dsbl.dev/latentbound.html)
