@@ -174,33 +174,6 @@ bindlang extends ideas from speech-act theory: performative meaning becomes a ru
 
 ---
 
-## Differentiators
-
-### What bindlang is not
-
-- Lazy evaluation
-- Promises
-- Standard conditional logic
-
-### What bindlang is
-
-- Portable semantic contracts
-- Context-aware activation
-- Cascade-ready dependency semantics
-- Auditable runtime behavior
-- Compression via semantic deferral
-
----
-
-## Design Principles
-
-1. Minimal core
-2. Strong typing
-3. JSON-portable symbols
-4. Full auditability of latent and bound states
-
----
-
 ## References
 
 - Theoretical foundation – [https://dsbl.dev/dsbl-framework.html](https://dsbl.dev/dsbl-framework.html)

@@ -19,6 +19,7 @@ bindlang/
 | `checkers.py` | Gate condition evaluation (who, when, where, state) |
 | `sinks.py` | Audit sink protocol and built-in implementations |
 | `export.py` | JSON/JSONL export utilities |
+| `composition.py` | Operator-based composition (`\|` fallback, `>>` sequential, `&` parallel) |
 
 **Managers** (composed into BindingEngine):
 | File | Purpose |

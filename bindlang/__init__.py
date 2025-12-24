@@ -20,6 +20,7 @@ from .core.models import (
 )
 from .core.state import SymbolState, SymbolStateMachine, StateTransition
 from .core.orchestration import ActorSequenceRunner
+from .core.composition import Sym, sym, Alternative, Sequential, Parallel, BindingResult, BindingStatus
 
 __all__ = [
     "__version__",
@@ -38,4 +39,11 @@ __all__ = [
     "SymbolStateMachine",
     "StateTransition",
     "ActorSequenceRunner",
+    "Sym",
+    "sym",
+    "Alternative",
+    "Sequential",
+    "Parallel",
+    "BindingResult",
+    "BindingStatus",
 ]

@@ -329,6 +329,186 @@ bound, final_ctx = engine.bind_all_registered(context, max_iterations=6)
 
 ---
 
+## Pattern 9: Fallback Chain
+
+Try primary symbol, if latent try fallback.
+
+```python
+from bindlang import LatentSymbol, GateCondition, Context, BindingEngine, sym
+from datetime import datetime
+
+engine = BindingEngine()
+
+# Primary action - admin only
+primary = LatentSymbol(
+    id="admin_action",
+    symbol_type="ACTION:admin",
+    gate=GateCondition(who={"admin"}),
+    payload={"level": "full"}
+)
+
+# Fallback - any user
+fallback = LatentSymbol(
+    id="user_action",
+    symbol_type="ACTION:user",
+    gate=GateCondition(who={"user", "admin"}),
+    payload={"level": "limited"}
+)
+
+engine.register(primary)
+engine.register(fallback)
+
+# Compose with | operator
+resilient = sym(primary) | sym(fallback)
+
+# User tries - falls back to limited action
+user_ctx = Context(who="user", when=datetime.now(), where="app", state={})
+result = resilient.try_bind(user_ctx, engine)
+# result.bound.symbol_id == "user_action"
+
+# Admin tries - gets full action
+admin_ctx = Context(who="admin", when=datetime.now(), where="app", state={})
+result = resilient.try_bind(admin_ctx, engine)
+# result.bound.symbol_id == "admin_action"
+```
+
+Chain multiple fallbacks:
+
+```python
+resilient = sym(primary) | sym(secondary) | sym(tertiary)
+```
+
+Both attempts are logged to audit trail.
+
+---
+
+## Pattern 10: Sequential Gate
+
+Left must bind before right is attempted.
+
+```python
+from bindlang import LatentSymbol, GateCondition, Context, BindingEngine, sym
+from datetime import datetime
+
+engine = BindingEngine()
+
+# Gate must pass before action runs
+gate = LatentSymbol(
+    id="auth_gate",
+    symbol_type="GATE:auth",
+    gate=GateCondition(who={"admin"}),
+    payload={"check": "permissions"}
+)
+
+action = LatentSymbol(
+    id="delete_action",
+    symbol_type="ACTION:delete",
+    gate=GateCondition(who={"admin"}),
+    payload={"target": "resource_123"}
+)
+
+engine.register(gate)
+engine.register(action)
+
+# Compose with >> operator
+guarded = sym(gate) >> sym(action)
+
+# Admin passes gate, action runs
+admin_ctx = Context(who="admin", when=datetime.now(), where="app", state={})
+result = guarded.try_bind(admin_ctx, engine)
+# result.bound.symbol_id == "delete_action"
+
+# User fails at gate, action never attempted
+user_ctx = Context(who="user", when=datetime.now(), where="app", state={})
+result = guarded.try_bind(user_ctx, engine)
+# result.is_bound == False, result.source.id == "auth_gate"
+```
+
+Chain multiple steps:
+
+```python
+validated = sym(auth) >> sym(validate) >> sym(execute)
+```
+
+---
+
+## Pattern 11: Parallel Requirements
+
+All symbols must bind for success.
+
+```python
+from bindlang import LatentSymbol, GateCondition, Context, BindingEngine, sym
+from datetime import datetime
+
+engine = BindingEngine()
+
+# All three approvals needed
+approval_a = LatentSymbol(
+    id="approval_a",
+    symbol_type="APPROVAL:a",
+    gate=GateCondition(who={"manager"}),
+    payload={"approver": "a"}
+)
+
+approval_b = LatentSymbol(
+    id="approval_b",
+    symbol_type="APPROVAL:b",
+    gate=GateCondition(who={"manager"}),
+    payload={"approver": "b"}
+)
+
+approval_c = LatentSymbol(
+    id="approval_c",
+    symbol_type="APPROVAL:c",
+    gate=GateCondition(who={"manager"}),
+    payload={"approver": "c"}
+)
+
+engine.register(approval_a)
+engine.register(approval_b)
+engine.register(approval_c)
+
+# Compose with & operator
+all_approvals = sym(approval_a) & sym(approval_b) & sym(approval_c)
+
+# Manager can satisfy all
+manager_ctx = Context(who="manager", when=datetime.now(), where="app", state={})
+result = all_approvals.try_bind(manager_ctx, engine)
+# result.is_bound == True
+# result.bound_all contains all three BoundSymbols
+```
+
+---
+
+## Pattern 12: Mixed Composition
+
+Combine operators for complex workflows.
+
+```python
+from bindlang import LatentSymbol, GateCondition, Context, BindingEngine, sym
+from datetime import datetime
+
+engine = BindingEngine()
+
+# Setup symbols
+admin_gate = LatentSymbol(id="admin_gate", symbol_type="GATE:admin", gate=GateCondition(who={"admin"}), payload={})
+user_gate = LatentSymbol(id="user_gate", symbol_type="GATE:user", gate=GateCondition(who={"user"}), payload={})
+validate = LatentSymbol(id="validate", symbol_type="CHECK:validate", gate=GateCondition(who={"user", "admin"}), payload={})
+execute = LatentSymbol(id="execute", symbol_type="ACTION:execute", gate=GateCondition(who={"user", "admin"}), payload={})
+
+for s in [admin_gate, user_gate, validate, execute]:
+    engine.register(s)
+
+# Complex workflow: (admin OR user gate) THEN (validate AND execute)
+workflow = (sym(admin_gate) | sym(user_gate)) >> (sym(validate) & sym(execute))
+
+user_ctx = Context(who="user", when=datetime.now(), where="app", state={})
+result = workflow.try_bind(user_ctx, engine)
+# Falls back to user_gate, then runs both validate and execute in parallel
+```
+
+---
+
 ## Next Steps
 
 - [Models](models.md) - Understand core types
